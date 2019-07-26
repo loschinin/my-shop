@@ -30,15 +30,13 @@ const csrfProtection = csrf();
 
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'images')
+    cb(null, 'images/')
   },
   filename: (req, file, cb) => {
-    cb(null, file.originalname);
+    cb(null, new Date().toISOString().replace(/:/g, '-') + '-' + file.originalname);
     
   }
 });
-
-// new Date().toISOString().replace(/:/g, '-') + '-' + 
 
 const fileFilter = (req, file, cb) => {
   if (
@@ -72,7 +70,7 @@ app.use(
   multer({ storage: fileStorage, fileFilter: fileFilter }).single('image')
 );
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('images', express.static(path.join(__dirname, 'images')));
+app.use('/images', express.static(path.join(__dirname, 'images')));
 console.log(path.join(__dirname, 'images'))
  
 app.use(
